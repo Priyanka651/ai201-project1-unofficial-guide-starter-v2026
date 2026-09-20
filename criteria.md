@@ -4,13 +4,13 @@ Five criteria that say what "working" means for this system, written in unit 1
 **before** any results existed.
 
 An acceptance criterion names a target: a number, a count, a rate, or something
-a person could plainly observe. *"Retrieval works"* is an opinion. *"For at
+a person could plainly observe. "Retrieval works" is an opinion. "For at
 least 4 of my 5 test questions, the top results include a chunk containing the
-answer"* is a criterion.
+answer" is a criterion.
 
 Under each one, write a sentence or two on **why that target** and not a
 stricter or looser one. A reason that says something about your corpus or your
-pipeline earns credit; *"80% seemed reasonable"* does not.
+pipeline earns credit; "80% seemed reasonable" does not.
 
 > Missing your own targets next unit costs you nothing. Setting a target so
 > easy you can't miss it does.
@@ -23,8 +23,11 @@ For at least 4 of my 5 test questions, the retrieved chunks include one that
 contains the answer.
 
 **Why this target:**
-<!-- e.g. "One of my questions is about a topic only two documents mention, so
-     I expect that one to be hard." -->
+
+I chose 4 out of 5 because the campus_life documents are short and usually
+focus on one topic, so I expect retrieval to find the correct information for
+most questions. I still allow one question to be missed because retrieval may
+not always return the best matching chunk.
 
 ---
 
@@ -33,8 +36,10 @@ contains the answer.
 Every answer the system produces names at least one source document.
 
 **Why this target:**
-<!-- Why all five and not four? What about your setup makes that achievable —
-     or what would have to go wrong for it not to be? -->
+
+I chose this target because every generated answer should be grounded in the
+retrieved documents. Naming at least one source makes it possible to check
+where the answer came from and helps prevent unsupported answers.
 
 ---
 
@@ -44,54 +49,40 @@ When I ask a question my documents clearly don't cover, the relevance gate
 stops it and the system returns "I don't have enough information about that" —
 in at least 4 of 5 tries.
 
-<!-- The five questions are the ones in `OUT_OF_SCOPE` at the bottom of
-     `questions.py`, and `run_eval.py` puts them through the gate and writes
-     what happened into your run log. Swap them for your own if you'd rather —
-     just keep five of them, or the "4 of 5" above has nothing to be 4 of. -->
-
 **Why this target:**
-<!-- What did your distances look like when you set the cutoff in Milestone 4?
-     Was there a clean gap, or did the two groups overlap? -->
+
+I chose 4 out of 5 because the out-of-scope questions are unrelated to the
+campus_life documents, so most of them should be rejected by the relevance
+gate. I allow one miss because similarity distances may sometimes overlap.
 
 ---
 
-## 4. Something about your chunks
+## 4. Chunks are complete and understandable
 
-<!-- YOU WRITE THIS ONE.
-
-     How would you know if your chunks were the right size? Name something
-     countable or observable.
-
-     Examples of the right shape — don't copy these, they should come from
-     what you actually saw in Milestone 3:
-       - "At least 4 of 5 sampled chunks read as a complete thought, with no
-          sentence cut in half at either end."
-       - "No chunk is shorter than 200 characters, since anything below that
-          in my corpus turned out to be a heading with no content under it." -->
-
-
+At least 4 out of 5 sampled chunks should contain enough context to be
+understandable on their own without cutting important information in the
+middle.
 
 **Why this target:**
 
-
+The campus_life documents are short and usually focus on a single topic.
+Because of this, most chunks should preserve a complete idea, but I allow one
+chunk to be imperfect because chunk boundaries may occasionally split related
+information.
 
 ---
 
-## 5. Your choice
+## 5. Answers stay grounded in the retrieved documents
 
-<!-- YOU WRITE THIS ONE TOO.
-
-     Pick something you actually care about getting right. It could be about
-     speed, about refusals, about a particular kind of question your corpus
-     handles badly, about source attribution being correct rather than merely
-     present — anything, as long as it names a number or an observable
-     outcome. -->
-
-
+For at least 4 out of my 5 test questions, the generated answer should not
+include factual information that is unsupported by the retrieved documents.
 
 **Why this target:**
 
-
+The purpose of this RAG system is to answer questions using the campus_life
+corpus instead of relying on unsupported model knowledge. I chose 4 out of 5
+because I expect most answers to remain grounded while allowing one case where
+the generated response may include extra information.
 
 ---
 
