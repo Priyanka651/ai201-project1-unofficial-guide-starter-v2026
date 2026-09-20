@@ -219,3 +219,6 @@ To be completed in Unit 2.
 ## What I'd Do Differently
 
 To be completed in Unit 2.
+
+
+I also tested five in-corpus and five out-of-scope questions. All five in-corpus questions were answered, while all five out-of-scope questions were rejected by the relevance gate.
