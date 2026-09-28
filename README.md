@@ -176,11 +176,11 @@ the relevance gate.
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | |
-| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | |
-| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | |
-| 4. Chunks are complete and understandable | 4 of 5 | 5/5 | 5/5 | 5/5 | |
-| 5. Answers stay grounded in retrieved documents | 4 of 5 | 5/5 | 5/5 | 5/5 | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Chunks are complete and understandable | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. Answers stay grounded in retrieved documents | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
 
 ### Real Output — Before
 
@@ -193,7 +193,8 @@ Chunks: `chunker.py::split_documents`
 Question: What material are the CS 210 exams based on?
 
 Best distance: 0.3002  
-Sources retrieved: `course_cs_210.txt`, `course_cs_210_exams.txt`, `course_cs_340_exams.txt`, `course_engl_205.txt`, `course_engl_205_exams.txt`
+Sources retrieved: `course_cs_210.txt`, `course_cs_210_exams.txt`,
+`course_cs_340_exams.txt`, `course_engl_205.txt`, `course_engl_205_exams.txt`
 
 Actual answer:
 
@@ -259,40 +260,124 @@ Student permits for the west lots go on sale in August (admin_parking_permits.tx
 
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| 1 | Retrieved chunk contains the answer | MET | The retrieved chunks contained the expected answer for all 5 questions in all three runs, which met the target of 4 of 5. |
+| 2 | Every answer names a source | MET | All 5 answers named a source in all three runs, meeting the target of 5 of 5. |
+| 3 | Gate stops out-of-corpus questions | MET | The relevance gate refused all 5 out-of-corpus questions, which exceeded the target of 4 of 5. |
+| 4 | Chunks are complete and understandable | MET | All 5 sampled chunks were complete and understandable on their own in all three runs, meeting the target of 4 of 5. |
+| 5 | Answers stay grounded in retrieved documents | MET | All 5 answers stayed consistent with the retrieved documents in all three runs, meeting the target of 4 of 5. |
 
 ## Diagnoses
 
-To be completed in Unit 2 after running the evaluation.
+None of my five criteria were missed. The system met the original targets in
+all three runs.
+
+However, my targets for some criteria may have been a little low because the
+system consistently scored 5 out of 5. I would tighten Criterion 1, "Retrieved
+chunk contains the answer," from 4 of 5 to 5 of 5 in future testing.
+
+One variation appeared in the generated answers. For the Tamsin Court question,
+run 3 said "private kitchen" instead of explicitly saying "full kitchen." The
+retrieved source still contained the correct information, and the answer stayed
+grounded in that source, but the wording did not include the expected phrase.
+This shows that answer generation can vary even when retrieval is consistent.
 
 ## The Improvement
 
 **What I changed:**
 
+I added one instruction to the grounding prompt in `generate.py`:
+
+`Preserve specific factual details and wording from the documents when they directly answer the question.`
+
 **Why I picked it:**
+
+I chose this improvement because retrieval was working correctly, but the
+generated wording was not completely consistent. In the before evaluation,
+one Tamsin Court answer said only "private kitchen" instead of explicitly
+including the expected detail "full kitchen." Since the correct document was
+already being retrieved, I changed the answer-generation prompt rather than
+the retrieval system.
 
 ### Run Log — After
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 | | | | |
-| 2. Every answer names a source | 5 of 5 | | | | |
-| 3. Gate stops out-of-corpus questions | 4 of 5 | | | | |
-| 4. Chunks are complete and understandable | 4 of 5 | | | | |
-| 5. Answers stay grounded in retrieved documents | 4 of 5 | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Chunks are complete and understandable | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. Answers stay grounded in retrieved documents | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+
+### Real Output — After
+
+Produced by: `run_eval.py::main`  
+Retrieval: `store.py::search`  
+Chunks: `chunker.py::split_documents`
+
+For the Tamsin Court question, the three generated answers were:
+
+**Run 1:**
+
+```text
+Based on the provided document, Tamsin Court provides rooms with a private kitchen (and a full kitchen).
+
+Source: housing_tamsin_court.txt
+```
+
+**Run 2:**
+
+```text
+Based on the provided document, Tamsin Court provides rooms with a private kitchen.
+
+Source: housing_tamsin_court.txt
+```
+
+**Run 3:**
+
+```text
+Tamsin Court rooms have a private kitchen (and a full kitchen).
+
+Source: housing_tamsin_court.txt
+```
+
+The relevance gate also refused all 5 of 5 out-of-corpus questions.
 
 **Did it help?**
 
-To be completed in Unit 2.
+The improvement made the prompt more explicit, but it did not completely
+remove the wording variation. Before the change, one of the three Tamsin Court
+runs omitted the phrase "full kitchen." After the change, one of the three runs
+still omitted it. Therefore, the improvement did not produce a measurable
+improvement on this three-run test.
+
+The retrieval itself remained consistent, and all five original criteria
+continued to meet their targets.
 
 ## What's Still Broken
 
-To be completed in Unit 2.
+The main remaining issue is variation in answer generation. Even when the
+correct source is retrieved, the model may not include every specific phrase
+that is expected. For example, after the improvement, one Tamsin Court run
+still said "private kitchen" without explicitly saying "full kitchen."
+
+The retrieval and relevance gate were consistent in these tests, but the
+generated wording can still vary between runs.
 
 ## What I'd Do Differently
 
-To be completed in Unit 2.
+If I continued working on the system, I would make the answer-generation step
+more structured instead of relying only on a general prompt instruction. For
+example, I would test a prompt that asks the model to first identify the exact
+fact in the retrieved document and then write the final answer from that fact.
+
+I would also use more test questions and more repeated runs. Five questions
+with three runs each were enough to reveal some variation, but a larger test
+set would give stronger evidence about how reliable the system is.
+
+## How I Used AI in Unit 2
+
+I used AI to help organize the evaluation results into the criterion-level run
+log, understand the difference between retrieval performance and answer
+generation variation, and identify a focused prompt improvement. I reviewed
+the actual outputs before deciding whether each criterion was met and whether
+the improvement helped.
