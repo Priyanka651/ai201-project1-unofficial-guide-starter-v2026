@@ -135,18 +135,18 @@ the diesel-engine question had a distance of 0.934. During my testing, the
 0.6 cutoff correctly allowed all five in-corpus questions and rejected all
 five out-of-scope questions.
 
-| Question                                                            | In corpus? | Best distance |
-| ------------------------------------------------------------------- | ---------- | ------------: |
-| What material are the CS 210 exams based on?                        | Yes        |         0.300 |
-| What time should students go to The Atrium to avoid the lunch rush? | Yes        |         0.332 |
-| What type of kitchen does Tamsin Court provide?                     | Yes        |         0.401 |
-| When do student parking permits for the west lots go on sale?       | Yes        |         0.180 |
-| By what time is The Atrium usually picked clean?                    | Yes        |         0.402 |
-| What is the capital of Mongolia?                                    | No         |         0.825 |
-| How do I change the oil in a diesel engine?                         | No         |         0.934 |
-| Who won the 1994 World Cup?                                         | No         |         0.886 |
-| What is the recommended dosage of ibuprofen for a headache?         | No         |         0.844 |
-| How do I write a for loop in Rust?                                  | No         |         0.896 |
+| Question | In corpus? | Best distance |
+|---|---|---:|
+| What material are the CS 210 exams based on? | Yes | 0.300 |
+| What time should students go to The Atrium to avoid the lunch rush? | Yes | 0.332 |
+| What type of kitchen does Tamsin Court provide? | Yes | 0.401 |
+| When do student parking permits for the west lots go on sale? | Yes | 0.180 |
+| By what time is The Atrium usually picked clean? | Yes | 0.402 |
+| What is the capital of Mongolia? | No | 0.825 |
+| How do I change the oil in a diesel engine? | No | 0.934 |
+| Who won the 1994 World Cup? | No | 0.886 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.844 |
+| How do I write a for loop in Rust? | No | 0.896 |
 
 ## How I Used AI
 
@@ -161,7 +161,10 @@ five sample chunks, I chose to keep each short document as one complete chunk.
 I then tested the implementation and verified that the chunks were produced by
 `chunker.py::split_documents`.
 
-I also tested five in-corpus and five out-of-scope questions. All five in-corpus questions were answered, while all five out-of-scope questions were rejected by the relevance gate.
+I also tested five in-corpus and five out-of-scope questions. All five in-corpus
+questions were answered, while all five out-of-scope questions were rejected by
+the relevance gate.
+
 ---
 
 # Unit 2
@@ -171,23 +174,96 @@ I also tested five in-corpus and five out-of-scope questions. All five in-corpus
 
 ## Run Log — Before
 
-| Criterion                                       | Target | Run 1 | Run 2 | Run 3 | Verdict |
-| ----------------------------------------------- | ------ | ----- | ----- | ----- | ------- |
-| 1. Retrieved chunk contains the answer          | 4 of 5 |       |       |       |         |
-| 2. Every answer names a source                  | 5 of 5 |       |       |       |         |
-| 3. Gate stops out-of-corpus questions           | 4 of 5 |       |       |       |         |
-| 4. Chunks are complete and understandable       | 4 of 5 |       |       |       |         |
-| 5. Answers stay grounded in retrieved documents | 4 of 5 |       |       |       |         |
+| Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
+|---|---|---|---|---|---|
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | |
+| 4. Chunks are complete and understandable | 4 of 5 | 5/5 | 5/5 | 5/5 | |
+| 5. Answers stay grounded in retrieved documents | 4 of 5 | 5/5 | 5/5 | 5/5 | |
+
+### Real Output — Before
+
+Produced by: `run_eval.py::main`  
+Retrieval: `store.py::search`  
+Chunks: `chunker.py::split_documents`
+
+**Criterion 1 — Retrieved chunk contains the answer**
+
+Question: What material are the CS 210 exams based on?
+
+Best distance: 0.3002  
+Sources retrieved: `course_cs_210.txt`, `course_cs_210_exams.txt`, `course_cs_340_exams.txt`, `course_engl_205.txt`, `course_engl_205_exams.txt`
+
+Actual answer:
+
+```text
+The CS 210 exams are drawn from lecture material rather than the textbook.
+
+Sources:
+- course_cs_210_exams.txt
+- course_cs_210.txt
+```
+
+**Criterion 2 — Every answer names a source**
+
+Question: What time should students go to The Atrium to avoid the lunch rush?
+
+Actual answer:
+
+```text
+To avoid the lunch rush, students should go to The Atrium before 11:45.
+
+Source: dining_the_atrium_followup.txt (and dining_the_atrium.txt)
+```
+
+**Criterion 3 — Gate stops out-of-corpus questions**
+
+```text
+What is the capital of Mongolia? — refused — best distance 0.825
+How do I change the oil in a diesel engine? — refused — best distance 0.934
+Who won the 1994 World Cup? — refused — best distance 0.886
+What is the recommended dosage of ibuprofen for a headache? — refused — best distance 0.844
+How do I write a for loop in Rust? — refused — best distance 0.896
+
+Gate refused 5 of 5.
+```
+
+**Criterion 4 — Chunks are complete and understandable**
+
+Question: What type of kitchen does Tamsin Court provide?
+
+Sources retrieved: `dining_north_kitchen.txt`, `housing_fenwick_court.txt`,
+`housing_tamsin_court.txt`, `housing_tamsin_court_laundry.txt`,
+`housing_tamsin_court_noise.txt`
+
+Actual answer:
+
+```text
+Tamsin Court provides a private kitchen in each studio apartment, and it is the only housing option on campus with a full kitchen.
+
+This information comes from the document housing_tamsin_court.txt.
+```
+
+**Criterion 5 — Answers stay grounded in retrieved documents**
+
+Question: When do student parking permits for the west lots go on sale?
+
+Actual answer:
+
+```text
+Student permits for the west lots go on sale in August (admin_parking_permits.txt).
+```
 
 ## Verdicts
 
-| #   | Criterion | Verdict | How I decided |
-| --- | --------- | ------- | ------------- |
-| 1   |           |         |               |
-| 2   |           |         |               |
-| 3   |           |         |               |
-| 4   |           |         |               |
-| 5   |           |         |               |
+| # | Criterion | Verdict | How I decided |
+|---|---|---|---|
+| 1 | | | |
+| 2 | | | |
+| 3 | | | |
+| 4 | | | |
+| 5 | | | |
 
 ## Diagnoses
 
@@ -201,13 +277,13 @@ To be completed in Unit 2 after running the evaluation.
 
 ### Run Log — After
 
-| Criterion                                       | Target | Run 1 | Run 2 | Run 3 | Verdict |
-| ----------------------------------------------- | ------ | ----- | ----- | ----- | ------- |
-| 1. Retrieved chunk contains the answer          | 4 of 5 |       |       |       |         |
-| 2. Every answer names a source                  | 5 of 5 |       |       |       |         |
-| 3. Gate stops out-of-corpus questions           | 4 of 5 |       |       |       |         |
-| 4. Chunks are complete and understandable       | 4 of 5 |       |       |       |         |
-| 5. Answers stay grounded in retrieved documents | 4 of 5 |       |       |       |         |
+| Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
+|---|---|---|---|---|---|
+| 1. Retrieved chunk contains the answer | 4 of 5 | | | | |
+| 2. Every answer names a source | 5 of 5 | | | | |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | | | | |
+| 4. Chunks are complete and understandable | 4 of 5 | | | | |
+| 5. Answers stay grounded in retrieved documents | 4 of 5 | | | | |
 
 **Did it help?**
 
@@ -220,4 +296,3 @@ To be completed in Unit 2.
 ## What I'd Do Differently
 
 To be completed in Unit 2.
-
