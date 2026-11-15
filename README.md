@@ -135,18 +135,18 @@ the diesel-engine question had a distance of 0.934. During my testing, the
 0.6 cutoff correctly allowed all five in-corpus questions and rejected all
 five out-of-scope questions.
 
-| Question | In corpus? | Best distance |
-|---|---|---:|
-| What material are the CS 210 exams based on? | Yes | 0.300 |
-| What time should students go to The Atrium to avoid the lunch rush? | Yes | 0.332 |
-| What type of kitchen does Tamsin Court provide? | Yes | 0.401 |
-| When do student parking permits for the west lots go on sale? | Yes | 0.180 |
-| By what time is The Atrium usually picked clean? | Yes | 0.402 |
-| What is the capital of Mongolia? | No | 0.825 |
-| How do I change the oil in a diesel engine? | No | 0.934 |
-| Who won the 1994 World Cup? | No | 0.886 |
-| What is the recommended dosage of ibuprofen for a headache? | No | 0.844 |
-| How do I write a for loop in Rust? | No | 0.896 |
+| Question                                                            | In corpus? | Best distance |
+| ------------------------------------------------------------------- | ---------- | ------------: |
+| What material are the CS 210 exams based on?                        | Yes        |         0.300 |
+| What time should students go to The Atrium to avoid the lunch rush? | Yes        |         0.332 |
+| What type of kitchen does Tamsin Court provide?                     | Yes        |         0.401 |
+| When do student parking permits for the west lots go on sale?       | Yes        |         0.180 |
+| By what time is The Atrium usually picked clean?                    | Yes        |         0.402 |
+| What is the capital of Mongolia?                                    | No         |         0.825 |
+| How do I change the oil in a diesel engine?                         | No         |         0.934 |
+| Who won the 1994 World Cup?                                         | No         |         0.886 |
+| What is the recommended dosage of ibuprofen for a headache?         | No         |         0.844 |
+| How do I write a for loop in Rust?                                  | No         |         0.896 |
 
 ## How I Used AI
 
@@ -174,13 +174,13 @@ the relevance gate.
 
 ## Run Log — Before
 
-| Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
-|---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
-| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
-| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
-| 4. Chunks are complete and understandable | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
-| 5. Answers stay grounded in retrieved documents | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| Criterion                                       | Target | Run 1 | Run 2 | Run 3 | Verdict |
+| ----------------------------------------------- | ------ | ----- | ----- | ----- | ------- |
+| 1. Retrieved chunk contains the answer          | 4 of 5 | 5/5   | 5/5   | 5/5   | MET     |
+| 2. Every answer names a source                  | 5 of 5 | 5/5   | 5/5   | 5/5   | MET     |
+| 3. Gate stops out-of-corpus questions           | 4 of 5 | 5/5   | 5/5   | 5/5   | MET     |
+| 4. Chunks are complete and understandable       | 4 of 5 | 5/5   | 5/5   | 5/5   | MET     |
+| 5. Answers stay grounded in retrieved documents | 4 of 5 | 5/5   | 5/5   | 5/5   | MET     |
 
 ### Real Output — Before
 
@@ -258,13 +258,13 @@ Student permits for the west lots go on sale in August (admin_parking_permits.tx
 
 ## Verdicts
 
-| # | Criterion | Verdict | How I decided |
-|---|---|---|---|
-| 1 | Retrieved chunk contains the answer | MET | The retrieved chunks contained the expected answer for all 5 questions in all three runs, which met the target of 4 of 5. |
-| 2 | Every answer names a source | MET | All 5 answers named a source in all three runs, meeting the target of 5 of 5. |
-| 3 | Gate stops out-of-corpus questions | MET | The relevance gate refused all 5 out-of-corpus questions, which exceeded the target of 4 of 5. |
-| 4 | Chunks are complete and understandable | MET | All 5 sampled chunks were complete and understandable on their own in all three runs, meeting the target of 4 of 5. |
-| 5 | Answers stay grounded in retrieved documents | MET | All 5 answers stayed consistent with the retrieved documents in all three runs, meeting the target of 4 of 5. |
+| #   | Criterion                                    | Verdict | How I decided                                                                                                             |
+| --- | -------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Retrieved chunk contains the answer          | MET     | The retrieved chunks contained the expected answer for all 5 questions in all three runs, which met the target of 4 of 5. |
+| 2   | Every answer names a source                  | MET     | All 5 answers named a source in all three runs, meeting the target of 5 of 5.                                             |
+| 3   | Gate stops out-of-corpus questions           | MET     | The relevance gate refused all 5 out-of-corpus questions, which exceeded the target of 4 of 5.                            |
+| 4   | Chunks are complete and understandable       | MET     | All 5 sampled chunks were complete and understandable on their own in all three runs, meeting the target of 4 of 5.       |
+| 5   | Answers stay grounded in retrieved documents | MET     | All 5 answers stayed consistent with the retrieved documents in all three runs, meeting the target of 4 of 5.             |
 
 ## Diagnoses
 
@@ -300,13 +300,13 @@ the retrieval system.
 
 ### Run Log — After
 
-| Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
-|---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
-| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
-| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
-| 4. Chunks are complete and understandable | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
-| 5. Answers stay grounded in retrieved documents | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| Criterion                                       | Target | Run 1 | Run 2 | Run 3 | Verdict |
+| ----------------------------------------------- | ------ | ----- | ----- | ----- | ------- |
+| 1. Retrieved chunk contains the answer          | 4 of 5 | 5/5   | 5/5   | 5/5   | MET     |
+| 2. Every answer names a source                  | 5 of 5 | 5/5   | 5/5   | 5/5   | MET     |
+| 3. Gate stops out-of-corpus questions           | 4 of 5 | 5/5   | 5/5   | 5/5   | MET     |
+| 4. Chunks are complete and understandable       | 4 of 5 | 5/5   | 5/5   | 5/5   | MET     |
+| 5. Answers stay grounded in retrieved documents | 4 of 5 | 5/5   | 5/5   | 5/5   | MET     |
 
 ### Real Output — After
 
@@ -381,3 +381,104 @@ log, understand the difference between retrieval performance and answer
 generation variation, and identify a focused prompt improvement. I reviewed
 the actual outputs before deciding whether each criterion was met and whether
 the improvement helped.
+
+## Capstone
+
+**What This Extends**
+
+This capstone extends my existing _The Unofficial Guide_ RAG application. The original project already supported document ingestion, semantic retrieval, a relevance gate, and grounded answers using Gemini. I extended its Flask API with structured request logging, performance measurements, token usage monitoring, and improved error handling.
+
+**The Shape**
+
+I selected Shape A: Deploy and Instrument, using Path B: a local HTTP service with logs. The application runs through Flask on port 5000. I chose this approach to demonstrate a working service and collect real operational measurements without requiring cloud hosting.
+
+**Running It**
+
+The project uses Python 3.13.7 and the dependencies in `requirements.txt`.
+
+After installing dependencies and configuring the Gemini API key, build the index using `python app.py index`.
+
+Start the service using:
+
+```powershell
+python serve.py
+```
+
+The service exposes `POST /ask`, `GET /health`, and `GET /usage`.
+
+For complete instructions, see `RUNNING.md`.
+
+**Instrumentation**
+
+Every `/ask` request records a timestamp, question, answer or error, processing duration, and status in `logs/requests.jsonl`.
+
+I tested successful requests and validation failures. The `/usage` endpoint reports the number of Gemini calls and the input/output tokens used during the current server session.
+
+**What It Costs**
+
+I measured 10 real Gemini calls with caching disabled.
+
+- Input tokens: 6,220
+- Output tokens: 629
+- Total tokens: 6,849
+- Average cost per request: approximately $0.000344
+- Estimated cost at 100 requests/day: approximately $0.0344/day
+
+These are estimated paid-tier API costs based on measured token counts, not actual billed charges. Hosting costs are excluded.
+
+See `CAPSTONE_COST.md` for details.
+
+**Run Log and Verdicts**
+
+| Criterion                  | Target                          | Result | Verdict |
+| -------------------------- | ------------------------------- | ------ | ------- |
+| Successful request logging | 10/10                           | 10/10  | MET     |
+| Failed request logging     | 3/3                             | 3/3    | MET     |
+| Response time              | At least 9/10 within 10 seconds | 10/10  | MET     |
+| API response correctness   | 3/3                             | 3/3    | MET     |
+| Server health check        | 3/3                             | 3/3    | MET     |
+
+The average uncached response time was 1.286 seconds.
+
+The earlier cached test averaged 0.057 seconds and was excluded from the uncached performance result.
+
+Detailed results are in `CAPSTONE_RESULTS.md`.
+
+**The Improvement**
+
+I identified an invalid-input handling problem in the Flask API.
+
+Before the change, sending a numeric question such as `{"question":123}` returned HTTP 500 without creating an error log.
+
+I updated `serve.py` to validate the JSON payload and question type before processing.
+
+After the change, all three tested numeric-input requests returned HTTP 400 and generated structured error logs.
+
+This improvement made invalid-input handling more predictable and improved error traceability.
+
+**What's Still Broken**
+
+The application is running locally rather than on a public hosting service. Request logs contain full questions and answers, so they are not suitable for sensitive information without additional privacy protections.
+
+The current token counters reset after a server restart. Performance measurements were also based on a limited workload, and additional testing is needed for other malformed inputs.
+
+**How I Used AI**
+
+I used AI to help understand the Flask API, add structured logging, troubleshoot Python dependency issues, design testing commands, interpret actual test outputs, calculate estimated API costs, and organize the capstone documentation.
+
+I ran the commands in my own environment, checked the API responses and logs, and used the observed results to document the improvement and remaining limitations.
+
+**Real Request Log Examples (10 entries)**
+
+```jsonl
+{"timestamp": "2026-11-15T07:35:07.109047+00:00", "question": "Is the housing lottery random?", "answer": "According to the documents, the housing lottery is not random in the way most people assume. Rising sophomores get a number drawn at random, but juniors and seniors are ordered by accumulated credit hours first, and only tie-break randomly. \n\n(Source: admin_housing_lottery.txt)", "duration_seconds": 0.689, "status": "success"}
+{"timestamp": "2026-11-15T07:35:07.926682+00:00", "question": "Is the housing lottery random?", "answer": "Based on the provided documents, the housing lottery is not completely random in the way most people assume. While rising sophomores get a number drawn at random, juniors and seniors are ordered by accumulated credit hours first, and only tie-break randomly. \n\nDocument used: `admin_housing_lottery.txt`", "duration_seconds": 0.811, "status": "success"}
+{"timestamp": "2026-11-15T07:35:08.741450+00:00", "question": "Is the housing lottery random?", "answer": "Based on the provided documents, the housing lottery is not completely random in the way most people assume. While rising sophomores get a number drawn at random, juniors and seniors are ordered by accumulated credit hours first, and only tie-break randomly. \n\nDocument used: `admin_housing_lottery.txt`", "duration_seconds": 0.805, "status": "success"}
+{"timestamp": "2026-11-15T07:35:09.522344+00:00", "question": "Is the housing lottery random?", "answer": "Based on the provided documents, the housing lottery is not completely random in the way most people assume. While rising sophomores get a number drawn at random, juniors and seniors are ordered by accumulated credit hours first, and only tie-break randomly. \n\nDocument used: `admin_housing_lottery.txt`", "duration_seconds": 0.766, "status": "success"}
+{"timestamp": "2026-11-15T07:35:10.293865+00:00", "question": "Is the housing lottery random?", "answer": "Based on the provided documents, the housing lottery is not completely random in the way most people assume: \"Rising sophomores get a number drawn at random, but juniors and seniors are ordered by accumulated credit hours first, and only tie-break randomly.\"\n\nSource file: admin_housing_lottery.txt", "duration_seconds": 0.762, "status": "success"}
+{"timestamp": "2026-11-15T07:35:11.270956+00:00", "question": "Is the housing lottery random?", "answer": "Based on the provided documents, the housing lottery is not completely random in the way most people assume. While rising sophomores get a number drawn at random, juniors and seniors are ordered by accumulated credit hours first, and only tie-break randomly. \n\nDocument used: `admin_housing_lottery.txt`", "duration_seconds": 0.968, "status": "success"}
+{"timestamp": "2026-11-15T07:35:11.938556+00:00", "question": "Is the housing lottery random?", "answer": "Based on the provided documents, the housing lottery is not completely random in the way most people assume: \"Rising sophomores get a number drawn at random, but juniors and seniors are ordered by accumulated credit hours first, and only tie-break randomly.\"\n\nSource: admin_housing_lottery.txt", "duration_seconds": 0.66, "status": "success"}
+{"timestamp": "2026-11-15T07:41:54.711503+00:00", "question": "", "answer": "Missing or empty question", "duration_seconds": 0.017, "status": "error"}
+{"timestamp": "2026-11-15T07:41:54.734914+00:00", "question": "", "answer": "Missing or empty question", "duration_seconds": 0.0, "status": "error"}
+{"timestamp": "2026-11-15T07:41:54.739827+00:00", "question": "", "answer": "Missing or empty question", "duration_seconds": 0.0, "status": "error"}
+```
