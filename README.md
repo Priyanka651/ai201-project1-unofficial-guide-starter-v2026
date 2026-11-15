@@ -482,3 +482,20 @@ I ran the commands in my own environment, checked the API responses and logs, an
 {"timestamp": "2026-11-15T07:41:54.734914+00:00", "question": "", "answer": "Missing or empty question", "duration_seconds": 0.0, "status": "error"}
 {"timestamp": "2026-11-15T07:41:54.739827+00:00", "question": "", "answer": "Missing or empty question", "duration_seconds": 0.0, "status": "error"}
 ```
+
+### Additional Verified Trial Results — November 15, 2026
+
+| Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
+|---|---|---|---|---|---|
+| 1. Successful request logging | 10/10 | 10/10 | 10/10 | 10/10 | MET |
+| 2. Failed request logging | 3/3 | Not separately recorded | Not separately recorded | 3/3 | MET for observed batch |
+| 3. Response time | At least 9/10 under 10s | 10/10 | 10/10 | 9/10 | MET |
+| 4. API response correctness | 3/3 | 200, fields present | 200, fields present | 200, fields present | MET |
+| 5. Server health check | 3/3 | ok, ready | ok, ready | ok, ready | MET |
+
+Logging and latency results use retrospective groups of ten existing successful requests. The failed-request result is one observed batch of three, not three independent batches.
+
+The latency analysis included one successful request lasting 14.252 seconds. A separate Gemini rate-limit failure returned HTTP 429 and was recorded with status error and duration 16.154 seconds.
+
+The invalid-input improvement had one recorded before-fix trial (HTTP 500, no structured log) and three after-fix trials (HTTP 400 with structured logs). A complete three-trial before-and-after comparison for all five criteria has not been performed.
+

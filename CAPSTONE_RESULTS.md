@@ -46,3 +46,38 @@ See `CAPSTONE_COST.md` for estimated costs.
 - Token counters reset when the server restarts.
 - The invalid-input improvement was tested with numeric questions; other malformed inputs need additional testing.
 - Only one baseline invalid-input trial was recorded before the fix.
+
+## Additional Observed Failure — Gemini Rate Limit
+
+During repeated API testing, Gemini returned HTTP 429 RESOURCE_EXHAUSTED because the free-tier limit of 15 requests per minute was exceeded.
+
+The Flask API recorded the failed request in logs/requests.jsonl with status "error" and duration_seconds 16.154.
+
+This shows that structured error logging works for external API failures. However, the request itself was not recovered successfully. Future work should add rate-aware throttling or a controlled retry strategy.
+
+
+## Additional Latency Analysis — Existing Logs
+
+Thirty successful requests were selected retrospectively from the JSONL logs and divided into three consecutive groups of ten.
+
+| Group | Target | Within 10 Seconds | Verdict |
+|---|---|---|---|
+| 1 | At least 9/10 | 10/10 | MET |
+| 2 | At least 9/10 | 10/10 | MET |
+| 3 | At least 9/10 | 9/10 | MET |
+
+One request took 14.252 seconds. These groups were reconstructed from existing logs, not executed as three separately planned trials.
+
+
+## Additional Successful Logging Analysis — Existing Logs
+
+Thirty successful requests were selected retrospectively from the JSONL logs and divided into three consecutive groups of ten.
+
+| Group | Target | Valid Log Entries | Verdict |
+|---|---|---|---|
+| 1 | 10/10 | 10/10 | MET |
+| 2 | 10/10 | 10/10 | MET |
+| 3 | 10/10 | 10/10 | MET |
+
+Each entry contained timestamp, question, answer, duration_seconds, and status. These groups were reconstructed from existing logs rather than executed as three separately planned trials.
+
