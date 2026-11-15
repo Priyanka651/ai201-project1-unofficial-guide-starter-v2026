@@ -97,8 +97,11 @@ def ask():
     start_time = time.perf_counter()
     from app import ask_pipeline
 
-    payload = request.get_json(silent=True) or {}
-    question = (payload.get("question") or "").strip()
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        payload = {}
+    raw_question = payload.get("question", "")
+    question = raw_question.strip() if isinstance(raw_question, str) else ""
 
     if not question:
         duration = time.perf_counter() - start_time
