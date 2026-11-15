@@ -20,20 +20,35 @@ Why this exists: `app.py` runs once and exits, which is fine on your laptop
 and impossible to deploy. A hosted service has to stay up and wait for
 requests. This is the smallest thing that does that.
 
-⚠️ There is deliberately no logging, no timing and no metrics in this file.
-Unit 9 has you build the structured log yourself — the request line, the
-timing field everyone skips, the whole instrument-before-you-deploy exercise.
-Shipping a logger here would hand you the answer to that. Add yours in unit 9;
-this file stays the bare shell until then.
+ This service includes structured JSONL request logging for the
+Unit 9 Capstone. Each request records its timestamp, question,
+answer or error, processing duration, and status.
 """
 
 import os
-
+import json
+import time
+from datetime import datetime, timezone
 from flask import Flask, jsonify, request
 
 import config
 
 app = Flask(__name__)
+
+
+def log_request(question, answer, duration, status):
+    os.makedirs("logs", exist_ok=True)
+
+    entry = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "question": question,
+        "answer": answer,
+        "duration_seconds": round(duration, 3),
+        "status": status,
+    }
+
+    with open("logs/requests.jsonl", "a", encoding="utf-8") as file:
+        file.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 
 @app.get("/health")
@@ -71,12 +86,16 @@ def ask():
     system working — it is an answer, and the JSON says so with
     `"refused": true` so whatever calls this can tell the two apart.
     """
+    start_time = time.perf_counter()
     from app import ask_pipeline
 
     payload = request.get_json(silent=True) or {}
     question = (payload.get("question") or "").strip()
 
     if not question:
+        duration = time.perf_counter() - start_time
+        log_request(question, "Missing or empty question", duration, "error")
+
         return (
             jsonify(
                 {
@@ -89,8 +108,19 @@ def ask():
 
     try:
         outcome = ask_pipeline(question, corpus=config.CORPUS)
-    except Exception as exc:  # noqa: BLE001 — a reader gets this, not a traceback
+
+    except Exception as exc:
+        duration = time.perf_counter() - start_time
+        log_request(question, f"{type(exc).__name__}: {exc}", duration, "error")
         return jsonify({"error": f"{type(exc).__name__}: {exc}"}), 500
+
+    duration = time.perf_counter() - start_time
+    log_request(
+        question,
+        outcome["answer"],
+        duration,
+        "refused" if outcome["refused"] else "success",
+    )
 
     return jsonify(
         {
@@ -126,7 +156,7 @@ def main():
     print(
         f"  curl -X POST http://localhost:{port}/ask \\\n"
         f"    -H 'Content-Type: application/json' \\\n"
-        f"    -d '{{\"question\": \"is the housing lottery random?\"}}'\n"
+        f'    -d \'{{"question": "is the housing lottery random?"}}\'\n'
     )
 
     app.run(host="0.0.0.0", port=port, debug=debug)
