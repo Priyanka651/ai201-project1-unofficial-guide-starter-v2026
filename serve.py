@@ -51,6 +51,14 @@ def log_request(question, answer, duration, status):
         file.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 
+@app.get("/usage")
+def usage():
+    """Return Gemini token usage for the current server session."""
+    from generate import token_counts, call_count
+
+    return jsonify({"model_calls": call_count(), "tokens": token_counts()})
+
+
 @app.get("/health")
 def health():
     """Is the service up, and is there an index to search?
