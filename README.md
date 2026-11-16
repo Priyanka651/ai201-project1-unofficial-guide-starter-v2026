@@ -392,3 +392,6 @@ The current token counters reset after a server restart. Performance measurement
 I used AI to help understand the Flask API, add structured logging, troubleshoot Python dependency issues, design testing commands, interpret actual test outputs, calculate estimated API costs, and organize the capstone documentation.
 
 I ran the commands in my own environment, checked the API responses and logs, and used the observed results to document the improvement and remaining limitations. For example, I used AI to help interpret the numeric-input HTTP 500 failure, then verified the HTTP 400 behavior after adding validation. I also used AI to help organize the latency measurements, and checked the logged durations before reporting the results.
+
+**Improvement verified:** 
+Before the fix, 3/3 invalid numeric-input requests returned HTTP 500. After the fix, 3/3 returned HTTP 400 with error logs. Health checks passed 3/3 in both versions. The after-fix empty-question test could not be completed due to a server connection issue.

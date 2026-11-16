@@ -81,3 +81,39 @@ Thirty successful requests were selected retrospectively from the JSONL logs and
 
 Each entry contained timestamp, question, answer, duration_seconds, and status. These groups were reconstructed from existing logs rather than executed as three separately planned trials.
 
+
+## Verified Before-and-After Input Validation Test — November 16, 2026
+
+Test input: {"question":123}
+
+| Trial | Before (commit 9234669) | After (commit c036693) |
+|---|---|---|
+| 1 | HTTP 500 | HTTP 400 |
+| 2 | HTTP 500 | HTTP 400 |
+| 3 | HTTP 500 | HTTP 400 |
+
+Before the fix, all three invalid-input requests returned HTTP 500.
+
+After the fix, all three returned HTTP 400. The latest JSONL logs also contained three corresponding entries with status "error".
+
+The after-fix logs recorded the invalid numeric input as an empty question rather than preserving the original value.
+
+This comparison confirms improved HTTP error handling for invalid question types.
+
+
+## Criterion 5 — Server Health Check (Before vs After)
+
+Target: 3/3 health requests return HTTP 200 with status=ok,
+index_ready=True, and corpus=campus_life.
+
+| Trial | Before Fix | After Fix |
+|---|---|---|
+| 1 | PASS | PASS |
+| 2 | PASS | PASS |
+| 3 | PASS | PASS |
+
+Verdict: MET for both versions.
+
+Before version: commit 9234669, port 5001.
+After version: commit c036693, port 5000.
+
